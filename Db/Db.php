@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Database;
+namespace App\Db;
 
 // J'importe PDO et PDOException
 use PDO;

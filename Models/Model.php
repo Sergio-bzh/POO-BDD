@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Db\Db;
-use App\Database\Db;
 
 class Model extends Db
 {
