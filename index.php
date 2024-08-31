@@ -12,4 +12,6 @@ $model = new AnnonceModel;
 
 echo '<pre>';
     var_dump($model);
+
+    var_dump($model->findAll());
 echo '</pre>';

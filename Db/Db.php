@@ -46,7 +46,7 @@ class Db extends PDO
     public static function getInstance():PDO // On aurait pu retourner Db ou self
     {
         // if(!self::$instance){ // Ma proposition à tester
-        if(self::$instance == null){ // proposition du prof
+        if(self::$instance === null){ // proposition du prof
             // self::$instance = new Db(); // une autre possibilité
             self::$instance = new self();
         }

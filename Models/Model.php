@@ -9,26 +9,27 @@ class Model extends Db
     // Table de la base des données
     protected $table;
 
-    // Instan ce de Db
+    // Instance de Db
     private $db;
 
      
-    public function findAll()
+    public function findAll():array|null
     {
-        $query = $this->requette('SELECT * FROM '. $this->table);
-        return $query-fetchAll();
+        $query = $this->request('SELECT * FROM '. $this->table);
+        return $query->fetchAll();
     }
 
     // TODO: Demander à un prof la raison de cette erreur
-    // Je nomme la requête autrement car le mot query me génère une erreur par rapport à la classe parent ()
+    // J'ai nomma la méthode request car le mot query me génère une erreur par rapport à query() de la classe parent ()
+
     /**
-     * Undocumented function
+     * Méthode query servant à passer les paramètres de la requête lors de l'instanciation du Sinbleton
      *
-     * @param string $sql
-     * @param array|null $attributs
-     * @return void
+     * @param string $sql La requête SQL à envoyter à la BDD
+     * @param array|null $attributs Tableau de paramètres à passer aux requêtes préparées
+     * @return object PDO c'est à dire l'instance du Singleton
      */
-    public function requette(string $sql, ?array $attributs = null)
+    public function request(string $sql, ?array $attributs = null):object
     {
         // Je récupère l'instance de Db
         $this->db = Db::getInstance();
