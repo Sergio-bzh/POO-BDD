@@ -14,4 +14,8 @@ echo '<pre>';
     var_dump($model);
 
     var_dump($model->findAll());
+
+    var_dump($model->findBy(['id' => null, 'actif' => null]));
+
+    var_dump($model->find('7'));
 echo '</pre>';

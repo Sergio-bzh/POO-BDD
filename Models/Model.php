@@ -12,16 +12,52 @@ class Model extends Db
     // Instance de Db
     private $db;
 
-     
-    public function findAll():array|null
+## DÉBUT des méthodes pour le READ du CRUD ##
+    /**
+     * Méthode pour récupérer tous les éléments d'une table en BDD
+     *
+     * @return array|null
+     */
+    public function findAll():array
     {
         $query = $this->request('SELECT * FROM '. $this->table);
         return $query->fetchAll();
     }
 
-    // TODO: Demander à un prof la raison de cette erreur
-    // J'ai nomma la méthode request car le mot query me génère une erreur par rapport à query() de la classe parent ()
+    /**
+     * Méthode pour récupérer les éléments d'une table en filtrant par un critère
+     *
+     * @param array $criteres tableax de critères passés comme attributs à la requête préparée
+     * @return array|null
+     */
+    public function findBy(array $criteres):array
+    {
+        $champs = [];
+        $valeurs = [];
 
+        // Je boucle pour éclater le tableau en deux tableaux
+        foreach ($criteres as $champ => $valeur) {
+            // Ma requête sera : SELECT * FROM ma_table WHERE nom_colonne = ? AND nom_autre_colonne = ?
+            // bindValue(:_bind, $valeur_bind)
+            $champs[] = "$champ = ?";
+            $valeurs[] = $valeur;
+        }
+        // Je transforme le tableau $champs en string avec la méthode implode() et je le stoque dans une variable
+        $liste_champs = implode(' AND ', $champs);
+
+        // Je prépare et exécute la requête
+        return $this->request('SELECT * FROM '. $this->table .' WHERE ' .$liste_champs, $valeurs)->fetchAll();
+    }
+
+    public function find(int $id):array
+    { // fetch()
+        return $this->request("SELECT * FROM $this->table WHERE id = $id")->fetch();
+    }
+## FIN des méthodes pour le READ du CRUD ##
+
+## DÉBUT des méthodes pour le CREATE du CRUD ##
+
+## FIN des méthodes pour le CREATE du CRUD ##
     /**
      * Méthode query servant à passer les paramètres de la requête lors de l'instanciation du Sinbleton
      *
