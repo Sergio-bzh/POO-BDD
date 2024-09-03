@@ -55,9 +55,41 @@ class Model extends Db
     }
 ## FIN des méthodes pour le READ du CRUD ##
 
-## DÉBUT des méthodes pour le CREATE du CRUD ##
+## DÉBUT de la méthode CREATE du CRUD ##
+    public function create(Model $model)
+    {
+        $fields = [];
+        $questionMarks = [];
+        $values = [];
 
-## FIN des méthodes pour le CREATE du CRUD ##
+        // Je boucle pour éclater le tableau en deux tableaux
+        foreach ($model as $field => $value) {
+            // Ma requête sera : INSERT INTO ma_table (col-1, col-1, col-n) VALUES (?, ?, ?)
+            // bindValue(:_bind, $valeur_bind)
+
+            if($value !== null && $field !== 'table' && $field !== 'db')
+            {
+                $fields[] = $field;
+                $questionMarks[] = '?';
+                $values[] = $value;
+            }
+        }
+
+        // Je transforme le tableau $fields en string avec la méthode implode() et je le stoque dans une variable et pareil pour $questionMarks
+        $field_list = implode(',  ', $fields);
+        $questionMarks_list = implode(',  ', $questionMarks);
+            
+        // Je prépare et exécute la requête
+        return $this->request('INSERT INTO '. $this->table .' (' .$field_list.') VALUES('.$questionMarks_list.')', $values);
+    }
+## FIN de la méthode CREATE du CRUD ##
+
+## DEBUT de la méthode UPDATE du CRUD ##
+## FIN de la méthode UPDATE du CRUD ##
+
+## DEBUT de la méthode DELETE du CRUD ##
+## FIN de la méthode DELETE du CRUD ##
+
     /**
      * Méthode query servant à passer les paramètres de la requête lors de l'instanciation du Sinbleton
      *
@@ -74,6 +106,7 @@ class Model extends Db
         if($attributs !== null){
             // Je fais une requête préparée
             $query = $this->db->prepare($sql);
+            
             $query->execute($attributs);
             return $query;
         }else{
@@ -81,4 +114,20 @@ class Model extends Db
             return $this->db->query($sql);
         }
     }
+
+## DEBUT Méthodes pour l'HYDRATTION des données pouvant venir d'un formulaire ##
+    public function hydrate(array $donnees)
+    {
+        foreach ($donnees as $key => $value) {
+            // Je crée un éventuel setter au nom de la clef
+            $setter = 'set'.ucfirst($key);
+            // Je vérifie si le setter existe avec la méthode interne PHP method_exists()
+            if(method_exists($this, $setter)){
+                // J'appelle les setters
+                $this->$setter($value);
+            }
+        }
+        return $this;
+    }
+## FIN Méthodes pour l'HYDRATTION des données pouvant venir d'un formulaire ##
 }
